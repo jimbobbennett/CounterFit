@@ -1,0 +1,48 @@
+<div class="sensor_container">
+    <p><b></b>{{ sensor.sensor_name() }} Sensor:</b> {{sensor.pin}} </p>
+    <p><input type="checkbox" id="random{{sensor.pin}}" name="vehicle1" value="Random"> Random</p>
+    <p>Value: <input type="checkbox" id="value{{sensor.pin}}" value="{{sensor.value}}"></p>
+    <p><button id="setbutton{{sensor.pin}}">Set</button></p>
+    <p><button id="deletebutton{{sensor.pin}}">Delete</button></p>
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            var set_button = document.getElementById("setbutton{{sensor.pin}}")
+            var delete_button = document.getElementById("deletebutton{{sensor.pin}}")
+            var is_random_control = document.getElementById("random{{sensor.pin}}")
+            var value_control = document.getElementById("value{{sensor.pin}}")
+
+            set_button.addEventListener("click", function() {
+                // get the values
+                var is_random = is_random_control.checked
+                var value = value_control.checked
+
+                var payload = {
+                    'pin': {{sensor.pin}},
+                    'value': value,
+                    'is_random': is_random
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./boolean_sensor_settings";
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+            });
+
+            delete_button.addEventListener("click", function(){
+                var payload = {
+                    'pin': {{sensor.pin}}
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./delete_sensor";
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+                location.reload();
+            });
+        })
+    </script>
+</div>

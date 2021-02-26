@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Virtual IoT Device</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <h1>Virtual IoT Device</h1>
+    <h2>Create new sensor:</h2>
+    Sensor Type:
+    <select name="new_sensor_type" id="new_sensor_type">
+        {% for sensor_type in all_sensors %}
+            <option value="{{ sensor_type.sensor_name() }}">{{ sensor_type.sensor_name() }}</option>
+        {% endfor %}
+    </select>
+    Units:
+    <select name="new_sensor_units" id="new_sensor_units">
+    </select>
+    Pin:
+    <select name="new_sensor_pin" id="new_sensor_pin">
+        {% for pin in pins %}
+            <option value="{{ pin }}">{{ pin }}</option>
+        {% endfor %}
+    </select>
+    <button id="add_new_sensor_button">Add</button>
+
+    <h2>Sensors:</h2>
+    <ul>
+        {% for sensor in sensors %}
+            {% if sensor.sensor_type().name == "Float": %}
+                {% with sensor=sensor %}
+                    {% include "float_sensor.html" %}
+                {% endwith %}
+            {% endif %}
+            {% if sensor.sensor_type().name == "Boolean": %}
+                {% with sensor=sensor %}
+                    {% include "boolean_sensor.html" %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            var add_new_sensor_button = document.getElementById("add_new_sensor_button")
+            var new_sensor_type_control = document.getElementById("new_sensor_type")
+            var new_sensor_pin_control = document.getElementById("new_sensor_pin")
+            var new_sensor_units_control = document.getElementById("new_sensor_units")
+
+            add_new_sensor_button.addEventListener("click", function() {
+                var new_sensor_type = new_sensor_type_control.value
+                var new_sensor_unit = new_sensor_units_control.value
+                var new_sensor_pin = parseInt(new_sensor_pin_control.value)
+
+                var payload = {
+                    'type': new_sensor_type,
+                    'pin': new_sensor_pin,
+                    'unit': new_sensor_unit
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./create_sensor";
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+                location.reload();
+            });
+
+            function populate_units() {
+                var new_sensor_type = new_sensor_type_control.value
+
+                var payload = {
+                    'type': new_sensor_type,
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./sensor_units";
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        response = JSON.parse(xhr.response)
+                        var inner = ""
+                        response.units.forEach(function (item, index) {
+                            inner += "<option value=\"" + item + "\">" + item + "</option>"
+                        });
+
+                        new_sensor_units_control.innerHTML = inner
+                    }
+                }
+                
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+            }
+
+            new_sensor_type_control.addEventListener('change', (event) => {
+                populate_units()
+            });
+
+            populate_units()
+        })
+    </script>
+
+</body>
+</html>
