@@ -29,6 +29,30 @@ This project is seriously under construction! Please let me know if you want to 
 
 ![Under development animated GIF](https://media.giphy.com/media/3o7qE1YN7aBOFPRw8E/giphy.gif)
 
+## Installing and running the app
+
+* Install the CounterFit app:
+
+    ```sh
+    pip install CounterFit
+    ```
+
+* Run the app:
+
+    ```sh
+    CounterFit
+    ```
+
+* The app will launch, listening for web requests on port 5000, and open a web browser for you to start adding virtual sensors and actuators to your project
+
+### Running on a different port
+
+To use a different port than the default 5000, set the `--port` option when you run the app:
+
+```sh
+CounterFit --port 5050
+```
+
 ## Shims
 
 The shims are designed to mimic the APIs for popular hardware components. The idea being you should be able to take code built against the shim and eventually run it on real hardware by changing the name of the package that is imported.
@@ -36,3 +60,7 @@ The shims are designed to mimic the APIs for popular hardware components. The id
 ### Available shims
 
 * ![Grove Shim](https://img.shields.io/badge/Platform-Python-green) [![Grove Shim](https://img.shields.io/badge/Shim-Grove-yellow)](./shims/grove/README.md) [![PyPI](https://img.shields.io/pypi/v/counterfit-shims-grove)](https://pypi.org/project/counterfit-shims-grove) [Grove Py](https://github.com/Seeed-Studio/grove.py) shims that work with the [Seeed Grove ecosystem](https://www.seeedstudio.com/category/Grove-c-1003.html).
+
+## Samples
+
+Check out the [samples](./samples) directory for a range of samples.
