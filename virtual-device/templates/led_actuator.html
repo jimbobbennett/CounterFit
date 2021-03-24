@@ -1,0 +1,69 @@
+<div class="actuator_container">
+    <p><b></b>LED:</b> {{actuator.pin}} </p>
+    <p><input type="color" id="color{{actuator.pin}}" value="{{actuator.color}}"> Color</p>
+    <p><button id="actuator_set_button{{actuator.pin}}">Set</button></p>
+    <p><button id="actuator_delete_button{{actuator.pin}}">Delete</button></p>
+    <svg xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="40" fill="white" stroke="black" stroke-width="3"/>
+        <circle id="led{{actuator.pin}}" cx="50" cy="50" r="40" fill="{{actuator.color}}" stroke="black" stroke-width="3"
+            {% if actuator.value: %}
+                visibility="visible"
+            {% else %}
+                visibility="hidden"
+            {% endif %}
+         />
+    </svg>
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            var set_button = document.getElementById("actuator_set_button{{actuator.pin}}")
+            var delete_button = document.getElementById("actuator_delete_button{{actuator.pin}}")
+            var color_control = document.getElementById("color{{actuator.pin}}")
+            var led_control = document.getElementById("led{{actuator.pin}}")
+
+            set_button.addEventListener("click", function() {
+                // get the values
+                var color = color_control.value
+
+                var payload = {
+                    'pin': {{actuator.pin}},
+                    'color': color
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./led_actuator_settings";
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+
+                led_control.style.fill=color
+            });
+
+            delete_button.addEventListener("click", function(){
+                var payload = {
+                    'pin': {{actuator.pin}}
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./delete_actuator";
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+                location.reload();
+            });
+
+            var socket = io();
+            socket.on('actuator_change{{actuator.pin}}', function(data) {
+                if (data.value){
+                    led_control.style.visibility = "visible"
+                }
+                else {
+                    led_control.style.visibility = "hidden"
+                }
+                console.log('actuator change received');
+                console.log(data);
+            });
+        })
+    </script>
+</div>

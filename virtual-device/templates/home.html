@@ -4,6 +4,17 @@
 <head>
     <title>Virtual IoT Device</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function() {
+            socket.emit('my event', {data: 'I\'m connected!'});
+        });
+        socket.onmessage = (data) => {
+            console.log(data);
+        };
+    </script>
 </head>
 
 <body>
@@ -26,17 +37,44 @@
     </select>
     <button id="add_new_sensor_button">Add</button>
 
+
+    <h2>Create new actuator:</h2>
+    Actuator Type:
+    <select name="new_actuator_type" id="new_actuator_type">
+        {% for actuator_type in all_actuators %}
+            <option value="{{ actuator_type.actuator_name() }}">{{ actuator_type.actuator_name() }}</option>
+        {% endfor %}
+    </select>
+    Pin:
+    <select name="new_actuator_pin" id="new_actuator_pin">
+        {% for pin in pins %}
+            <option value="{{ pin }}">{{ pin }}</option>
+        {% endfor %}
+    </select>
+    <button id="add_new_actuator_button">Add</button>
+
     <h2>Sensors:</h2>
     <ul>
         {% for sensor in sensors %}
-            {% if sensor.sensor_type().name == "Float": %}
+            {% if sensor.sensor_type().name == "FLOAT": %}
                 {% with sensor=sensor %}
                     {% include "float_sensor.html" %}
                 {% endwith %}
             {% endif %}
-            {% if sensor.sensor_type().name == "Boolean": %}
+            {% if sensor.sensor_type().name == "BOOLEAN": %}
                 {% with sensor=sensor %}
                     {% include "boolean_sensor.html" %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <h2>Actuators:</h2>
+    <ul>
+        {% for actuator in actuators %}
+            {% if actuator.actuator_name() == "LED": %}
+                {% with actuator=actuator %}
+                    {% include "led_actuator.html" %}
                 {% endwith %}
             {% endif %}
         {% endfor %}
@@ -45,8 +83,11 @@
     <script>
         window.addEventListener("DOMContentLoaded", function () {
             var add_new_sensor_button = document.getElementById("add_new_sensor_button")
+            var add_new_actuator_button = document.getElementById("add_new_actuator_button")
             var new_sensor_type_control = document.getElementById("new_sensor_type")
+            var new_actuator_type_control = document.getElementById("new_actuator_type")
             var new_sensor_pin_control = document.getElementById("new_sensor_pin")
+            var new_actuator_pin_control = document.getElementById("new_actuator_pin")
             var new_sensor_units_control = document.getElementById("new_sensor_units")
 
             add_new_sensor_button.addEventListener("click", function() {
@@ -62,6 +103,24 @@
 
                 var xhr = new XMLHttpRequest();
                 var url = "./create_sensor";
+                xhr.open("POST", url, false);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                var data = JSON.stringify(payload);
+                xhr.send(data);
+                location.reload();
+            });
+
+            add_new_actuator_button.addEventListener("click", function() {
+                var new_actuator_type = new_actuator_type_control.value
+                var new_actuator_pin = parseInt(new_actuator_pin_control.value)
+
+                var payload = {
+                    'type': new_actuator_type,
+                    'pin': new_actuator_pin
+                }
+
+                var xhr = new XMLHttpRequest();
+                var url = "./create_actuator";
                 xhr.open("POST", url, false);
                 xhr.setRequestHeader("Content-Type", "application/json");
                 var data = JSON.stringify(payload);

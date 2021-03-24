@@ -1,16 +1,16 @@
 <div class="sensor_container">
     <p><b></b>{{ sensor.sensor_name() }} Sensor:</b> {{sensor.pin}} </p>
     <p>Value range: {{ sensor.valid_min }} to {{ sensor.valid_max }} {{ sensor.unit }}</p>
-    <p><input type="checkbox" id="random{{sensor.pin}}" name="vehicle1" value="Random"> Random &nbsp;
+    <p><input type="checkbox" id="random{{sensor.pin}}" value="Random"> Random &nbsp;
         Min:<input type="number" id="random_min{{sensor.pin}}" value="{{sensor.random_min}}">
         Max:<input type="number" id="random_max{{sensor.pin}}" value="{{sensor.random_max}}"></p>
     <p>Value: <input type="number" id="value{{sensor.pin}}" value="{{sensor.value}}"> {{ sensor.unit }}</p>
-    <p><button id="setbutton{{sensor.pin}}">Set</button></p>
-    <p><button id="deletebutton{{sensor.pin}}">Delete</button></p>
+    <p><button id="sensor_set_button{{sensor.pin}}">Set</button></p>
+    <p><button id="sensor_delete_button{{sensor.pin}}">Delete</button></p>
     <script>
         window.addEventListener("DOMContentLoaded", function () {
-            var set_button = document.getElementById("setbutton{{sensor.pin}}")
-            var delete_button = document.getElementById("deletebutton{{sensor.pin}}")
+            var set_button = document.getElementById("sensor_set_button{{sensor.pin}}")
+            var delete_button = document.getElementById("sensor_delete_button{{sensor.pin}}")
             var is_random_control = document.getElementById("random{{sensor.pin}}")
             var random_min_control = document.getElementById("random_min{{sensor.pin}}")
             var random_max_control = document.getElementById("random_max{{sensor.pin}}")

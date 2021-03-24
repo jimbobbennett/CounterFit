@@ -4,13 +4,13 @@ from typing import List
 import random
 
 class SensorType(Enum):
-    Float = 1
-    Boolean = 2
+    FLOAT = 1
+    BOOLEAN = 2
 
 class SensorBase(ABC):
     def __init__(self, pin:int):
         self.__pin = pin
-        self.random = False
+        self.__random = False
     
     @staticmethod
     @abstractmethod
@@ -28,11 +28,14 @@ class SensorBase(ABC):
     
     @property
     def random(self) -> bool:
-        return self._random
+        return self.__random
 
     @random.setter
-    def random(self, v: bool):
-        self._random = v
+    def random(self, val: bool):
+        self.__random = val
+
+class DefaultUnit(Enum):
+    NOUNITS = 1
 
 class FloatSensorBase(SensorBase):
     def __init__(self, pin:int, valid_min:float, valid_max:float):
@@ -57,45 +60,45 @@ class FloatSensorBase(SensorBase):
 
     @property
     @abstractmethod
-    def unit() -> str:
+    def unit(self) -> str:
         pass
 
     @staticmethod
     def sensor_type() -> SensorType:
-        return SensorType.Float
+        return SensorType.FLOAT
 
     @property
     def value(self) -> float:
-        if self._random:
-            return round(random.uniform(self._random_min, self._random_max), 2)
+        if self.__random:
+            return round(random.uniform(self.__random_min, self.__random_max), 2)
 
-        return self._value
+        return self.__value
 
     @value.setter
-    def value(self, v: float):
-        if v < self.__valid_min or v > self.__valid_max:
+    def value(self, val: float):
+        if val < self.__valid_min or val > self.__valid_max:
             raise ValueError()
-        self._value = v
+        self.__value = val
 
     @property
     def random_min(self) -> float:
-        return self._random_min
+        return self.__random_min
 
     @random_min.setter
-    def random_min(self, v: float):
-        if v < self.__valid_min or v > self.__valid_max:
+    def random_min(self, val: float):
+        if val < self.__valid_min or val > self.__valid_max:
             raise ValueError()
-        self._random_min = v
+        self.__random_min = val
 
     @property
     def random_max(self) -> float:
-        return self._random_max
+        return self.__random_max
 
     @random_max.setter
-    def random_max(self, v: float):
-        if v < self.__valid_min or v > self.__valid_max:
+    def random_max(self, val: float):
+        if val < self.__valid_min or val > self.__valid_max:
             raise ValueError()
-        self._random_max = v
+        self.__random_max = val
 
     @property
     def valid_min(self) -> float:
@@ -119,23 +122,23 @@ class BooleanSensorBase(SensorBase):
 
     @staticmethod
     def sensor_type() -> SensorType:
-        return SensorType.Boolean
+        return SensorType.BOOLEAN
 
     @property
     def value(self) -> bool:
-        if self._random:
+        if self.__random:
             return random.choice([True, False])
 
-        return self._value
+        return self.__value
 
     @value.setter
-    def value(self, v: bool):
-        self._value = v
+    def value(self, val: bool):
+        self.__value = val
 
 class TemperatureUnit(Enum):
-    Celsius = 1
-    Fahrenheit = 2
-    Kelvin = 3
+    CELSIUS = 1
+    FAHRENHEIT = 2
+    KELVIN = 3
 
 class TemperatureSensor(FloatSensorBase):
     def __init__(self, pin:int, unit):
@@ -144,9 +147,9 @@ class TemperatureSensor(FloatSensorBase):
 
         self.__unit = unit
 
-        if self.__unit == TemperatureUnit.Celsius:
+        if self.__unit == TemperatureUnit.CELSIUS:
             valid_min = -273.15
-        elif self.__unit == TemperatureUnit.Fahrenheit:
+        elif self.__unit == TemperatureUnit.FAHRENHEIT:
             valid_min = -459.67
         else:
             valid_min = 0
@@ -163,13 +166,13 @@ class TemperatureSensor(FloatSensorBase):
 
     @staticmethod
     def sensor_units() -> List[str]:
-        return [TemperatureUnit.Celsius.name, TemperatureUnit.Fahrenheit.name, TemperatureUnit.Kelvin.name]
+        return [TemperatureUnit.CELSIUS.name, TemperatureUnit.FAHRENHEIT.name, TemperatureUnit.KELVIN.name]
 
 class PressureUnit(Enum):
-    kPa = 1
-    torr = 2
-    atm = 3
-    bar = 4
+    KPA = 1
+    TORR = 2
+    ATM = 3
+    BAR = 4
 
 class PressureSensor(FloatSensorBase):
     def __init__(self, pin:int, unit):
@@ -190,12 +193,27 @@ class PressureSensor(FloatSensorBase):
 
     @staticmethod
     def sensor_units() -> List[str]:
-        return [PressureUnit.kPa.name, PressureUnit.torr.name, PressureUnit.atm.name, PressureUnit.bar.name]
+        return [PressureUnit.KPA.name, PressureUnit.TORR.name, PressureUnit.ATM.name, PressureUnit.BAR.name]
+
+class LightSensor(FloatSensorBase):
+    #pylint: disable=W0613
+    def __init__(self, pin:int, unit):
+
+        super().__init__(pin, 0, 1000)
+
+    @staticmethod
+    def sensor_name() -> str:
+        return 'Light'
+
+    @property
+    def unit(self) -> str:
+        return DefaultUnit.NOUNITS.name
+
+    @staticmethod
+    def sensor_units() -> List[str]:
+        return [DefaultUnit.NOUNITS.name]
 
 class ButtonSensor(BooleanSensorBase):
-    def __init__(self, pin):
-        super().__init__(pin)
-
     @staticmethod
     def sensor_name() -> str:
         return 'Button'

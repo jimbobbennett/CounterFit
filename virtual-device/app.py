@@ -1,21 +1,29 @@
-import sensors
 import json
 from flask import Flask, request, render_template
+from flask_socketio import SocketIO
+
+import sensors
+import actuators
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '247783f3-bdda-4536-bffc-109e2464f10b'
+socketio = SocketIO(app)
 
 sensor_cache = {}
+actuator_cache = {}
 
 all_sensors = []
+all_actuators = []
 
-def get_all_subclasses(c, class_list):
-    for sub_class in c.__subclasses__():
+def get_all_subclasses(cls, class_list):
+    for sub_class in cls.__subclasses__():
         if len(sub_class.__abstractmethods__) == 0:
             class_list.append(sub_class)
 
         get_all_subclasses(sub_class, class_list)
 
 get_all_subclasses(sensors.SensorBase, all_sensors)
+get_all_subclasses(actuators.ActuatorBase, all_actuators)
 
 @app.route('/', methods=['GET'])
 def home():
@@ -24,7 +32,12 @@ def home():
         if pin not in sensor_cache:
             pins.append(pin)
 
-    return render_template('home.html', sensors=sensor_cache.values(), all_sensors=all_sensors, pins=pins)
+    return render_template('home.html', 
+                           sensors=sensor_cache.values(),
+                           actuators=actuator_cache.values(), 
+                           all_sensors=all_sensors,
+                           all_actuators=all_actuators,
+                           pins=pins)
 
 @app.route('/create_sensor', methods=['POST'])
 def create_sensor():
@@ -38,7 +51,7 @@ def create_sensor():
 
     for sensor in all_sensors:
         if sensor.sensor_name() == sensor_type:
-            if sensor.sensor_type() == sensors.SensorType.Float:
+            if sensor.sensor_type() == sensors.SensorType.FLOAT:
                 new_sensor = sensor(pin, unit)
             else:
                 new_sensor = sensor(pin)
@@ -47,19 +60,35 @@ def create_sensor():
 
     return 'OK', 200
 
+@app.route('/create_actuator', methods=['POST'])
+def create_actuator():
+    body = request.get_json()
+
+    print("Create actuator called:", body)
+    
+    actuator_type = body['type']
+    pin = body['pin']
+
+    for actuator in all_actuators:
+        if actuator.actuator_name() == actuator_type:
+            new_actuator = actuator(pin)
+
+            actuator_cache[pin] = new_actuator
+
+    return 'OK', 200
 
 @app.route('/sensor_value', methods=['GET'])
 def get_sensor_value():
     pin = int(request.args.get('pin', ''))
     if pin in sensor_cache:
-        sensor:sensors.Sensor = sensor_cache[pin]
+        sensor = sensor_cache[pin]
         
         response = {'value' : sensor.value}
         print("Returning sensor value", response, "for pin", pin)
 
         return json.dumps(response)
     
-    return 'Sensor with pin ' + pin + ' not found', 404
+    return 'Sensor with pin ' + str(pin) + ' not found', 404
 
 @app.route('/delete_sensor', methods=['POST'])
 def delete_sensor():
@@ -71,6 +100,21 @@ def delete_sensor():
 
     if pin in sensor_cache:
         del sensor_cache[pin]
+
+    return 'OK', 200
+
+@app.route('/delete_actuator', methods=['POST'])
+def delete_actuator():
+    body = request.get_json()
+
+    print("Delete actuator called:", body)
+
+    pin = body['pin']
+
+    if pin in actuator_cache:
+        del actuator_cache[pin]
+
+    return 'OK', 200
 
 @app.route('/float_sensor_settings', methods=['POST'])
 def set_float_sensor_settings():
@@ -85,11 +129,26 @@ def set_float_sensor_settings():
     random_max = body['random_max']
 
     if pin in sensor_cache:
-        sensor:sensors.Sensor = sensor_cache[pin]
+        sensor = sensor_cache[pin]
         sensor.value = value
         sensor.random = is_random
         sensor.random_min = random_min
         sensor.random_max = random_max
+
+    return 'OK', 200
+
+@app.route('/led_actuator_settings', methods=['POST'])
+def set_led_actuator_settings():
+    body = request.get_json()
+
+    print("LED actuator settings called:", body)
+    
+    pin = body['pin']
+    color = body['color']
+
+    if pin in actuator_cache:
+        actuator = actuator_cache[pin]
+        actuator.color = color
 
     return 'OK', 200
 
@@ -104,7 +163,7 @@ def set_boolean_sensor_settings():
     is_random = body['is_random']
 
     if pin in sensor_cache:
-        sensor:sensors.Sensor = sensor_cache[pin]
+        sensor = sensor_cache[pin]
         sensor.value = value
         sensor.random = is_random
 
@@ -120,9 +179,29 @@ def get_sensor_units():
 
     for sensor in all_sensors:
         if sensor.sensor_name() == sensor_type:
-            if sensor.sensor_type() == sensors.SensorType.Float:
+            if sensor.sensor_type() == sensors.SensorType.FLOAT:
                 return {'units':sensor.sensor_units()}
-            else:
-                return {'units':[]}
+
+            return {'units':[]}
 
     return 'Not found', 404
+
+@app.route('/actuator_value', methods=['POST'])
+def set_actuator_value():
+    pin = int(request.args.get('pin', ''))
+    body = request.get_json()
+
+    print("Actuator value called:", body)
+
+    value = body['value']
+
+    if pin in actuator_cache:
+        actuator = actuator_cache[pin]
+        actuator.value = value
+
+        socketio.emit('actuator_change' + str(pin), {'pin':pin, 'value': value})
+
+    return 'OK', 200
+
+if __name__ == '__main__':
+    socketio.run(app)

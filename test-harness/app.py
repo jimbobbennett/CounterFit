@@ -8,8 +8,9 @@ button = Button(3)
 async def main():
     while True:
         if (button.value()):
-            print(temp_sensor.value())
-            print(pressure_sensor.value())
+            print("Button pressed - Temperature:", temp_sensor.value(), "Pressure:", pressure_sensor.value())
+        else:
+            print("Button not pressed")
 
         # Wait for a minute so telemetry is not sent to often
         await asyncio.sleep(5)
