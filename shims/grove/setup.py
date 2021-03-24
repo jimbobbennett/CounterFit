@@ -1,3 +1,7 @@
+'''
+Shims for the Seeed Grove Py library for use with the Virtual IoT Device
+'''
+
 from setuptools import find_packages, setup
 
 setup(
