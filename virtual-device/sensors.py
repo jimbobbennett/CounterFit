@@ -10,7 +10,7 @@ class SensorType(Enum):
 class SensorBase(ABC):
     def __init__(self, pin:int):
         self.__pin = pin
-        self.__random = False
+        self._random = False
     
     @staticmethod
     @abstractmethod
@@ -28,11 +28,11 @@ class SensorBase(ABC):
     
     @property
     def random(self) -> bool:
-        return self.__random
+        return self._random
 
     @random.setter
     def random(self, val: bool):
-        self.__random = val
+        self._random = val
 
 class DefaultUnit(Enum):
     NOUNITS = 1
@@ -69,7 +69,7 @@ class FloatSensorBase(SensorBase):
 
     @property
     def value(self) -> float:
-        if self.__random:
+        if self._random:
             return round(random.uniform(self.__random_min, self.__random_max), 2)
 
         return self.__value
@@ -126,7 +126,7 @@ class BooleanSensorBase(SensorBase):
 
     @property
     def value(self) -> bool:
-        if self.__random:
+        if self._random:
             return random.choice([True, False])
 
         return self.__value
