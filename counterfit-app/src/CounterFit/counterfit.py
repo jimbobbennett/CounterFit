@@ -1,9 +1,13 @@
+import argparse
 import json
+import os
+import webbrowser
+from threading import Timer
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 
-from .sensors import *
-from .actuators import *
+from .sensors import SensorBase, SensorType
+from .actuators import ActuatorBase
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '247783f3-bdda-4536-bffc-109e2464f10b'
@@ -203,8 +207,20 @@ def set_actuator_value():
 
     return 'OK', 200
 
+def open_browser(port):
+    webbrowser.open_new(f'http://127.0.0.1:{port}/')
+
 def main():
-    socketio.run(app)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', metavar='port', type=int, default=5000, help='the port to run on')
+
+    args = parser.parse_args()
+
+    print(f'CounterFit - virtual IoT hardware running on port {args.port}')
+
+    Timer(5, open_browser, [args.port]).start()
+    
+    socketio.run(app, port=args.port)
 
 if __name__ == '__main__':
     main()

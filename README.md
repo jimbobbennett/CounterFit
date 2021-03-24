@@ -18,7 +18,7 @@ That's where this tool comes in.
 
 ## What is CounterFit
 
-This is a tool that is designed to simulated various IoT hardware components, such as LEDs, buttons, temperature sensors and the like. It is made of two parts:
+CounterFit is a tool that is designed to simulated various IoT hardware components, such as LEDs, buttons, temperature sensors and the like. It is made of two parts:
 
 * The CounterFit app - this is a web app run locally where you can connect virtual sensors and actuators to your virtual hardware
 * Shims - these are libraries that mimic popular hardware APIs so you can take code that runs against well known hardware and run it against the CounterFit app.
