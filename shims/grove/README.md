@@ -1,6 +1,6 @@
 # CounterFit Shims - Grove
 
-[![PyPI](https://img.shields.io/pypi/v/counterfit-shims-grove)](https://pypi.org/project/counterfit-shims-grove)
+![Grove Shim](https://img.shields.io/badge/Platform-Python-green) [![PyPI](https://img.shields.io/pypi/v/counterfit-shims-grove)](https://pypi.org/project/counterfit-shims-grove)
 
 Shims for the Seeed grove sensors and actuators to use with the [CounterFit virtual IoT device app](https://github.com/jimbobbennett/CounterFit).
 

@@ -20,7 +20,7 @@ That's where this tool comes in.
 
 This is a tool that is designed to simulated various IoT hardware components, such as LEDs, buttons, temperature sensors and the like. It is made of two parts:
 
-* The CounterFit app - this is a web app where you can connect virtual sensors and actuators to your virtual hardware
+* The CounterFit app - this is a web app run locally where you can connect virtual sensors and actuators to your virtual hardware
 * Shims - these are libraries that mimic popular hardware APIs so you can take code that runs against well known hardware and run it against the CounterFit app.
 
 **This project is under construction**
@@ -35,4 +35,4 @@ The shims are designed to mimic the APIs for popular hardware components. The id
 
 ### Available shims
 
-* [![Grove Shim](https://img.shields.io/badge/Shim-Grove-yellow)](./shims/grove/README.md) [![PyPI](https://img.shields.io/pypi/v/counterfit-shims-grove)](https://pypi.org/project/counterfit-shims-grove) [Grove Py](https://github.com/Seeed-Studio/grove.py) Python APIs shims that work with the [Seeed Grove ecosystem](https://www.seeedstudio.com/category/Grove-c-1003.html).
+* ![Grove Shim](https://img.shields.io/badge/Platform-Python-green) [![Grove Shim](https://img.shields.io/badge/Shim-Grove-yellow)](./shims/grove/README.md) [![PyPI](https://img.shields.io/pypi/v/counterfit-shims-grove)](https://pypi.org/project/counterfit-shims-grove) [Grove Py](https://github.com/Seeed-Studio/grove.py) shims that work with the [Seeed Grove ecosystem](https://www.seeedstudio.com/category/Grove-c-1003.html).
