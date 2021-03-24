@@ -2,8 +2,8 @@ import json
 from flask import Flask, request, render_template
 from flask_socketio import SocketIO
 
-import sensors
-import actuators
+from .sensors import *
+from .actuators import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '247783f3-bdda-4536-bffc-109e2464f10b'
@@ -22,8 +22,8 @@ def get_all_subclasses(cls, class_list):
 
         get_all_subclasses(sub_class, class_list)
 
-get_all_subclasses(sensors.SensorBase, all_sensors)
-get_all_subclasses(actuators.ActuatorBase, all_actuators)
+get_all_subclasses(SensorBase, all_sensors)
+get_all_subclasses(ActuatorBase, all_actuators)
 
 @app.route('/', methods=['GET'])
 def home():
@@ -51,7 +51,7 @@ def create_sensor():
 
     for sensor in all_sensors:
         if sensor.sensor_name() == sensor_type:
-            if sensor.sensor_type() == sensors.SensorType.FLOAT:
+            if sensor.sensor_type() == SensorType.FLOAT:
                 new_sensor = sensor(pin, unit)
             else:
                 new_sensor = sensor(pin)
@@ -179,7 +179,7 @@ def get_sensor_units():
 
     for sensor in all_sensors:
         if sensor.sensor_name() == sensor_type:
-            if sensor.sensor_type() == sensors.SensorType.FLOAT:
+            if sensor.sensor_type() == SensorType.FLOAT:
                 return {'units':sensor.sensor_units()}
 
             return {'units':[]}
@@ -203,5 +203,8 @@ def set_actuator_value():
 
     return 'OK', 200
 
-if __name__ == '__main__':
+def main():
     socketio.run(app)
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,2 @@
+include src/CounterFit/static/*.*
+include src/CounterFit/templates/*.*
