@@ -7,11 +7,11 @@ Examples:
     .. code-block:: python
 
         import time
-        from virtualiot_shims_grove.virtual_iot_connection import VirtualIoTConnection
-        from virtualiot_shims_grove.grove_light_sensor_v1_2 import GroveLightSensor
+        from counterfit_shims_grove.counterfit_connection import CounterFitConnection
+        from counterfit_shims_grove.grove_light_sensor_v1_2 import GroveLightSensor
 
-        # Init the connection to the Virtual IoT Device app
-        VirtualIoTConnection.init('127.0.0.1', 5000)
+        # Init the connection to the CounterFit Virtual IoT Device app
+        CounterFitConnection.init('127.0.0.1', 5000)
 
         # connect to alalog pin 2(slot A2)
         PIN = 2
@@ -25,7 +25,7 @@ Examples:
 '''
 # pylint: disable=too-few-public-methods
 
-from .virtual_iot_connection import VirtualIoTConnection
+from .counterfit_connection import CounterFitConnection
 
 __all__ = ['GroveLightSensor']
 
@@ -44,4 +44,4 @@ class GroveLightSensor:
         '''
         Get the light strength value, maximum value is 1000
         '''
-        return VirtualIoTConnection.get_sensor_float_value(self.__pin)
+        return CounterFitConnection.get_sensor_float_value(self.__pin)

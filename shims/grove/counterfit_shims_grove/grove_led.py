@@ -9,11 +9,11 @@ Examples:
 
     .. code-block:: python
         import time
-        from virtualiot_shims_grove.virtual_iot_connection import VirtualIoTConnection
-        from virtualiot_shims_grove.grove_light_sensor_v1_2 import GroveLightSensor
+        from counterfit_shims_grove.counterfit_connection import CounterFitConnection
+        from counterfit_shims_grove.grove_light_sensor_v1_2 import GroveLightSensor
 
-        # Init the connection to the Virtual IoT Device app
-        VirtualIoTConnection.init('127.0.0.1', 5000)
+        # Init the connection to the CounterFit Virtual IoT Device app
+        CounterFitConnection.init('127.0.0.1', 5000)
 
         # connect to pin 5(slot D5)
         PIN   = 5
@@ -25,7 +25,7 @@ Examples:
             time.sleep(1)
 '''
 
-from .virtual_iot_connection import VirtualIoTConnection
+from .counterfit_connection import CounterFitConnection
 
 __all__ = ['GroveLed']
 
@@ -43,10 +43,10 @@ class GroveLed():
         '''
         light on the led
         '''
-        return VirtualIoTConnection.set_actuator_boolean_value(self.__pin, True)
+        return CounterFitConnection.set_actuator_boolean_value(self.__pin, True)
 
     def off(self):
         '''
         light off the led
         '''
-        return VirtualIoTConnection.set_actuator_boolean_value(self.__pin, False)
+        return CounterFitConnection.set_actuator_boolean_value(self.__pin, False)

@@ -1,5 +1,5 @@
 '''
-Provides a connection to the Virtual IoT Device server. This connection is re-used by all the virtual sensors.
+Provides a connection to the CounterFit Virtual IoT Device app. This connection is re-used by all the virtual sensors.
 
 Examples:
 
@@ -7,24 +7,24 @@ Examples:
 
     .. code-block:: python
 
-        from virtualiot-shims-grove.virtual_iot_connection import VirtualIoTConnection
+        from counterfit_shims_grove.counterfit_connection import CounterFitConnection
 
-        VirtualIoTConnection.init()
+        CounterFitConnection.init()
 
 
     When connection to another computer on a different port:
 
     .. code-block:: python
 
-        from virtualiot-shims-grove.virtual_iot_connection import VirtualIoTConnection
+        from counterfit_shims_grove.counterfit_connection import CounterFitConnection
 
-        VirtualIoTConnection.init('192.168.197.1', 5050)
+        CounterFitConnection.init('192.168.197.1', 5050)
 '''
 import requests
 
-class VirtualIoTConnection:
+class CounterFitConnection:
     '''
-    Connects to the Virtual IoT device on a give host and port, and allows the value of sensors to be read,
+    Connects to the CounterFit Virtual IoT device on a give host and port, and allows the value of sensors to be read,
     as well as setting the value of actuators.
     '''
     base_url = ''
@@ -34,14 +34,14 @@ class VirtualIoTConnection:
         '''
         Initializes the connection to the Virtual IoT Device running on the given url and port
         '''
-        VirtualIoTConnection.base_url = f'http://{hostname}:{str(port)}/'
+        CounterFitConnection.base_url = f'http://{hostname}:{str(port)}/'
     
     @staticmethod
     def get_sensor_float_value(pin: int) -> float:
         '''
         Reads a float value from the sensor on the given pin
         '''
-        response = requests.get(VirtualIoTConnection.base_url + 'sensor_value?pin=' + str(pin))
+        response = requests.get(CounterFitConnection.base_url + 'sensor_value?pin=' + str(pin))
         return float(response.json()['value'])
     
     @staticmethod
@@ -49,7 +49,7 @@ class VirtualIoTConnection:
         '''
         Reads a bool value from the sensor on the given pin
         '''
-        response = requests.get(VirtualIoTConnection.base_url + 'sensor_value?pin=' + str(pin))
+        response = requests.get(CounterFitConnection.base_url + 'sensor_value?pin=' + str(pin))
         return bool(response.json()['value'])
     
     @staticmethod
@@ -57,11 +57,11 @@ class VirtualIoTConnection:
         '''
         Sends a float value to the actuator on the given pin
         '''
-        requests.post(VirtualIoTConnection.base_url + 'actuator_value?pin=' + str(pin), json= {'value':value})
+        requests.post(CounterFitConnection.base_url + 'actuator_value?pin=' + str(pin), json= {'value':value})
     
     @staticmethod
     def set_actuator_boolean_value(pin: int, value: bool) -> None:
         '''
         Sends a bool value to the actuator on the given pin
         '''
-        requests.post(VirtualIoTConnection.base_url + 'actuator_value?pin=' + str(pin), json= {'value':value})
+        requests.post(CounterFitConnection.base_url + 'actuator_value?pin=' + str(pin), json= {'value':value})
