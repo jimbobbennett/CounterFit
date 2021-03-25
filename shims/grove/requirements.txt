@@ -1,7 +1,0 @@
-wheel
-setuptools
-twine
-pytest
-pytest-runner
-requests
-pylint
