@@ -26,8 +26,8 @@
     <header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark fixed-top">
         <div class="container-fluid d-flex align-items-center">
             <h1 class="d-flex align-items-center fs-4 text-white mb-0">
-                <img src="{{ url_for('static', filename='images/CounterFitLogo.svg') }}" width="42" height="58"
-                    class="me-3" alt="CounterFit logo">&nbsp;&nbsp;
+                <img src="{{ url_for('static', filename='images/CounterFitLogo.png') }}" width="58" height="58"
+                    class="me-3" alt="CounterFit logo">
                 CounterFit - Virtual IoT Hardware
             </h1>
 
@@ -43,7 +43,7 @@
         </div>
     </header>
 
-    <div class="card shadow-sm" style="margin-left: 10px;margin-right: 10px; margin-bottom: 10px; margin-top: 100px;">
+    <div class="card shadow-sm border-dark" style="margin-left: 10px;margin-right: 10px; margin-bottom: 10px; margin-top: 100px;">
         <div class="card-header py-3">
             <h2 style="text-align:center">Sensors</h2>
         </div>
@@ -51,7 +51,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-3">
-                        <div class="card shadow-sm" style="margin-top: 11px;">
+                        <div class="card shadow-sm border-primary" style="margin-top: 11px;">
                             <div class="card-header py-3 text-white bg-primary">
                                 <h4 class="my-0 fw-normal" style="text-align:center">Create sensor</h4>
                             </div>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-9">
                         <div class="container">
-                            <div class="row row-cols-1 row-cols-sm-2 g-2">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-3 g-3">
                                 
                                 {% for sensor in sensors %}
             
@@ -125,7 +125,7 @@
         </div>
     </div>
 
-    <div class="card shadow-sm" style="margin: 10px;">
+    <div class="card shadow-sm border-dark" style="margin: 10px;">
         <div class="card-header py-3">
             <h2 style="text-align:center">Actuators</h2>
         </div>
@@ -133,7 +133,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-3">
-                        <div class="card shadow-sm" style="margin-top: 11px;">
+                        <div class="card shadow-sm  border-primary" style="margin-top: 11px;">
                             <div class="card-header py-3 text-white bg-primary">
                                 <h4 class="my-0 fw-normal" style="text-align:center">Create actuator</h4>
                             </div>
@@ -172,7 +172,7 @@
                     </div>
                     <div class="col-9">
                         <div class="container">
-                            <div class="row row-cols-1 row-cols-sm-2 g-2">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-sm-3 g-3">
                                 
                                 {% for actuator in actuators %}
 
