@@ -1,6 +1,5 @@
 import argparse
 import json
-import os
 import webbrowser
 from threading import Timer
 from flask import Flask, request, render_template
@@ -28,6 +27,9 @@ def get_all_subclasses(cls, class_list):
 
 get_all_subclasses(SensorBase, all_sensors)
 get_all_subclasses(ActuatorBase, all_actuators)
+
+all_sensors = sorted(all_sensors, key=lambda s: s.sensor_name())
+all_actuators = sorted(all_actuators, key=lambda a: a.actuator_name())
 
 @app.route('/', methods=['GET'])
 def home():
@@ -218,7 +220,7 @@ def main():
 
     print(f'CounterFit - virtual IoT hardware running on port {args.port}')
 
-    Timer(5, open_browser, [args.port]).start()
+    Timer(3, open_browser, [args.port]).start()
     
     socketio.run(app, port=args.port)
 

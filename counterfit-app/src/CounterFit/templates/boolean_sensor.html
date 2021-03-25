@@ -1,15 +1,53 @@
-<div class="sensor_container">
-    <p><b></b>{{ sensor.sensor_name() }} Sensor:</b> {{sensor.pin}} </p>
-    <p><input type="checkbox" id="random{{sensor.pin}}" name="vehicle1" value="Random"> Random</p>
-    <p>Value: <input type="checkbox" id="value{{sensor.pin}}" value="{{sensor.value}}"></p>
-    <p><button id="sensor_set_button{{sensor.pin}}">Set</button></p>
-    <p><button id="sensor_delete_button{{sensor.pin}}">Delete</button></p>
+<div class="card shadow-sm" style="margin: 10px;">
+    <div class="card-header py-3 text-white bg-secondary">
+        <div class="container-fluid d-flex align-items-center">
+            <h4 class="my-0 fw-normal">{{ sensor.sensor_name() }}</h4>
+            <h4 class="my-0 fw-normal ms-auto">Pin {{sensor.pin}}</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    Value:
+                </div>
+                <div class="col">
+                    <input class="form-check-input" type="checkbox" id="value{{sensor.pin}}" value="{{sensor.value}}"/>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col">
+                    Random:
+                </div>
+                <div class="col">
+                    <input class="form-check-input" type="checkbox" id="random{{sensor.pin}}" value="Random"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <button id="sensor_set_button{{sensor.pin}}" class="w-100 btn btn-lg btn-primary">Set</button>
+                </div>
+                <div class="col">
+                    <button id="sensor_delete_button{{sensor.pin}}" class="w-100 btn btn-lg btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         window.addEventListener("DOMContentLoaded", function () {
             var set_button = document.getElementById("sensor_set_button{{sensor.pin}}")
             var delete_button = document.getElementById("sensor_delete_button{{sensor.pin}}")
             var is_random_control = document.getElementById("random{{sensor.pin}}")
             var value_control = document.getElementById("value{{sensor.pin}}")
+
+            is_random_control.addEventListener("change", function() {
+                value_control.disabled = is_random_control.checked
+            })
 
             set_button.addEventListener("click", function() {
                 // get the values

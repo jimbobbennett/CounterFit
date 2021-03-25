@@ -1,18 +1,52 @@
-<div class="actuator_container">
-    <p><b></b>LED:</b> {{actuator.pin}} </p>
-    <p><input type="color" id="color{{actuator.pin}}" value="{{actuator.color}}"> Color</p>
-    <p><button id="actuator_set_button{{actuator.pin}}">Set</button></p>
-    <p><button id="actuator_delete_button{{actuator.pin}}">Delete</button></p>
-    <svg xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="40" fill="white" stroke="black" stroke-width="3"/>
-        <circle id="led{{actuator.pin}}" cx="50" cy="50" r="40" fill="{{actuator.color}}" stroke="black" stroke-width="3"
-            {% if actuator.value: %}
-                visibility="visible"
-            {% else %}
-                visibility="hidden"
-            {% endif %}
-         />
-    </svg>
+
+<div class="card shadow-sm" style="margin: 10px;">
+    <div class="card-header py-3 text-white bg-secondary">
+        <div class="container-fluid d-flex align-items-center">
+            <h4 class="my-0 fw-normal">{{ actuator.actuator_name() }}</h4>
+            <h4 class="my-0 fw-normal ms-auto">Pin {{actuator.pin}}</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    Color:
+                </div>
+                <div class="col">
+                    <input class="form-control" type="color" id="color{{actuator.pin}}" value="{{actuator.color}}" style="width: 100%;"/>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col">
+                </div>
+                <div class="col">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto d-block img-responsive" style="height: 100px;">
+                        <circle cx="50" cy="50" r="40" fill="white" stroke="black" stroke-width="3"/>
+                        <circle id="led{{actuator.pin}}" cx="50" cy="50" r="40" fill="{{actuator.color}}" stroke="black" stroke-width="3"
+                            {% if actuator.value: %}
+                                visibility="visible"
+                            {% else %}
+                                visibility="hidden"
+                            {% endif %}
+                        />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <button id="actuator_set_button{{actuator.pin}}" class="w-100 btn btn-lg btn-primary">Set</button>
+                </div>
+                <div class="col">
+                    <button id="actuator_delete_button{{actuator.pin}}" class="w-100 btn btn-lg btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         window.addEventListener("DOMContentLoaded", function () {
             var set_button = document.getElementById("actuator_set_button{{actuator.pin}}")
@@ -61,6 +95,7 @@
                 else {
                     led_control.style.visibility = "hidden"
                 }
+
                 console.log('actuator change received');
                 console.log(data);
             });

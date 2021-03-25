@@ -34,8 +34,9 @@ class SensorBase(ABC):
     def random(self, val: bool):
         self._random = val
 
+#pylint: disable=C0103
 class DefaultUnit(Enum):
-    NOUNITS = 1
+    NoUnits = 1
 
 class FloatSensorBase(SensorBase):
     def __init__(self, pin:int, valid_min:float, valid_max:float):
@@ -135,10 +136,11 @@ class BooleanSensorBase(SensorBase):
     def value(self, val: bool):
         self.__value = val
 
+#pylint: disable=C0103
 class TemperatureUnit(Enum):
-    CELSIUS = 1
-    FAHRENHEIT = 2
-    KELVIN = 3
+    Celsius = 1
+    Fahrenheit = 2
+    Kelvin = 3
 
 class TemperatureSensor(FloatSensorBase):
     def __init__(self, pin:int, unit):
@@ -147,9 +149,9 @@ class TemperatureSensor(FloatSensorBase):
 
         self.__unit = unit
 
-        if self.__unit == TemperatureUnit.CELSIUS:
+        if self.__unit == TemperatureUnit.Celsius:
             valid_min = -273.15
-        elif self.__unit == TemperatureUnit.FAHRENHEIT:
+        elif self.__unit == TemperatureUnit.Fahrenheit:
             valid_min = -459.67
         else:
             valid_min = 0
@@ -166,13 +168,14 @@ class TemperatureSensor(FloatSensorBase):
 
     @staticmethod
     def sensor_units() -> List[str]:
-        return [TemperatureUnit.CELSIUS.name, TemperatureUnit.FAHRENHEIT.name, TemperatureUnit.KELVIN.name]
+        return [TemperatureUnit.Celsius.name, TemperatureUnit.Fahrenheit.name, TemperatureUnit.Kelvin.name]
 
+#pylint: disable=C0103,C0102
 class PressureUnit(Enum):
-    KPA = 1
-    TORR = 2
-    ATM = 3
-    BAR = 4
+    kPa = 1
+    torr = 2
+    atm = 3
+    bar = 4
 
 class PressureSensor(FloatSensorBase):
     def __init__(self, pin:int, unit):
@@ -193,7 +196,7 @@ class PressureSensor(FloatSensorBase):
 
     @staticmethod
     def sensor_units() -> List[str]:
-        return [PressureUnit.KPA.name, PressureUnit.TORR.name, PressureUnit.ATM.name, PressureUnit.BAR.name]
+        return [PressureUnit.kPa.name, PressureUnit.torr.name, PressureUnit.atm.name, PressureUnit.bar.name]
 
 class LightSensor(FloatSensorBase):
     #pylint: disable=W0613
@@ -207,11 +210,11 @@ class LightSensor(FloatSensorBase):
 
     @property
     def unit(self) -> str:
-        return DefaultUnit.NOUNITS.name
+        return DefaultUnit.NoUnits.name
 
     @staticmethod
     def sensor_units() -> List[str]:
-        return [DefaultUnit.NOUNITS.name]
+        return [DefaultUnit.NoUnits.name]
 
 class ButtonSensor(BooleanSensorBase):
     @staticmethod
